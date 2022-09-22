@@ -1,4 +1,4 @@
 sort_tr.zip
-__pycache__/framework.cpython-38.pyc
+*.pyc
+__pycache__/
 tt.py
-__pycache__/framework.cpython-38.pyc
