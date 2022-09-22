@@ -40,14 +40,8 @@ class FrameWorker():
 
             tracker = tracker.round(3)
 
-            for track in tracker:
-                for item in items_default:
-                    x, y, w, h = item["bbox"]
-                    bbox_body = [x, y, x+w, y+h, score]
-                    iou = IOU(track, bbox_body)
-                    if iou > 0.99:
-                        item.update({'id': str(int(track[4]))})
-                        break
+            for item, track in zip(items_default, tracker):
+                item["id"] = str(int(track[4]))
 
             frame.update({'items': items_default})
             self.cameras[cam_id] = mot_tracker
