@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 
+import logging
 import sys
 import json
 from framework import FrameWorker
 import argparse
+import traceback
+
 # from distutils.util import strtobool
+logging.basicConfig(filename = 'errors.log', level = logging.ERROR)
 
 parser = argparse.ArgumentParser()
 
@@ -19,16 +23,39 @@ worker = FrameWorker(args.minhit, args.maxunm, args.iou)
 # with open("logs.txt", "a") as f:
 #     f.write("Line read\n")
 
-for line in sys.stdin:
-    if len(line) < 3:
-        continue
+
+while True:
+    try:
+        line = sys.stdin.readline()
+        if len(line) < 3:
+            continue
 
 
-    frame = json.loads(line)
+        frame = json.loads(line)
 
-    worker.frame_processing(frame)
+        worker.frame_processing(frame)
+        sys.stdout.write(json.dumps(frame))
+        sys.stdout.write("\n")
+        sys.stdout.flush()
+    except Exception as e:
+        with open('log.txt', 'a') as f:
+            f.write(str(e))
+            f.write(traceback.format_exc())
 
-    sys.stdout.write(json.dumps(frame))
-    sys.stdout.write("\n")
-    sys.stdout.flush()
+# for line in sys.stdin:
+#     if len(line) < 3:
+#         continue
+
+#     try:
+#         frame = json.loads(line)
+#     except EOFError as e:
+#         logging.error('Error occurred ' + str(e))
+
+
+
+#     worker.frame_processing(frame)
+
+#     sys.stdout.write(json.dumps(frame))
+#     sys.stdout.write("\n")
+#     sys.stdout.flush()
 
